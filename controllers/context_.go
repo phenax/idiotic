@@ -26,6 +26,13 @@ type Context struct {
 
 
 
+type Page struct {
+	Title string;
+	Body []byte;
+}
+
+
+
 /**
  * ctx.send
  * Writes a string of html to response
@@ -39,6 +46,27 @@ func (ctx *Context) send(str string) {
 }
 
 
+func getPage(title string, templateName string) (*Page, error) {
+
+	body, err := ioutil.ReadFile(getTemplatePath(templateName));
+
+	if(err == nil) {
+		body = body[:];
+	}
+
+	return &Page{ Body: body, Title: title }, err;
+}
+
+func getTemplatePath(templateName string) string {
+
+	return filepath.Join(
+		filepath.Base("."),
+		"views",
+		templateName + ".html",
+	);
+}
+
+
 /**
  * ctx.render
  * Render a template and write to response
@@ -46,29 +74,29 @@ func (ctx *Context) send(str string) {
  * params
  * -- templateName {string}   Name of the template to render
  */
-func (ctx *Context) render(templateName string) {
+func (ctx *Context) render(templateName string, options interface{}) {
 
-	templatePath := filepath.Join(filepath.Base("."), "views", templateName + ".html");
+	// The path of the template
+	wrapperPath := getTemplatePath("wrapper");
 
-	templateContent, err := ioutil.ReadFile(templatePath);
+	page, err := getPage("Coolness", templateName);
 
 	if(err != nil) {
 		log.Fatal(err);
 		return;
 	}
 
-	tmpl, err :=
-		template.
-			New("poo").
-			Parse(string(templateContent[:]));
+	// Parse the template
+	tmpl, err := template.ParseFiles(wrapperPath);
 
-	options := struct{
-		Cool string;
-	}{
-		Cool: "ness",
-	};
+	// If couldnt read
+	if(err != nil) {
+		log.Fatal(err);
+		return;
+	}
 
-	err = tmpl.ExecuteTemplate(ctx.res, "Wrapper", options);
+	// Render the template
+	err = tmpl.ExecuteTemplate(ctx.res, "Wrapper", page);
 
 	if(err != nil) {
 		log.Fatal(err);

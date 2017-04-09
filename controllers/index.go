@@ -13,5 +13,14 @@ import (
  */
 func Homepage(ctx *Context) {
 
-	ctx.render("wrapper");
+	options :=
+		struct{
+			Title string;
+			Cool string;
+		}{
+			Title: "This is a cool title",
+			Cool: "Foobar",
+		};
+
+	ctx.render("index", options);
 }
