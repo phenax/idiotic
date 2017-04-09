@@ -1,0 +1,9 @@
+
+tmp
+node_modules
+
+idiotic
+
+*.out
+*.o
+*.so
