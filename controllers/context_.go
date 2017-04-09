@@ -25,7 +25,13 @@ type Context struct {
 };
 
 
-
+/**
+ * The page related data
+ *
+ * fields
+ * -- Title {string}  The title of the page
+ * -- Body  {[]byte}  The content to go inside the body
+ */
 type Page struct {
 	Title string;
 	Body []byte;
@@ -40,32 +46,10 @@ type Page struct {
  * params
  * -- str {string}  The string to send
  */
-func (ctx *Context) send(str string) {
+func (ctx *Context) Send(str string) {
 
 	fmt.Fprint(ctx.res, str);
 }
-
-
-func getPage(title string, templateName string) (*Page, error) {
-
-	body, err := ioutil.ReadFile(getTemplatePath(templateName));
-
-	if(err == nil) {
-		body = body[:];
-	}
-
-	return &Page{ Body: body, Title: title }, err;
-}
-
-func getTemplatePath(templateName string) string {
-
-	return filepath.Join(
-		filepath.Base("."),
-		"views",
-		templateName + ".html",
-	);
-}
-
 
 /**
  * ctx.render
@@ -74,7 +58,7 @@ func getTemplatePath(templateName string) string {
  * params
  * -- templateName {string}   Name of the template to render
  */
-func (ctx *Context) render(templateName string, options interface{}) {
+func (ctx *Context) Render(templateName string, options interface{}) {
 
 	// The path of the template
 	wrapperPath := getTemplatePath("wrapper");
@@ -104,4 +88,46 @@ func (ctx *Context) render(templateName string, options interface{}) {
 }
 
 
+
+
+
+
+/**
+ * getPage
+ * Create a new Page instance
+ *
+ * params
+ * -- title {string}  The title of the page
+ * -- templateName {string}  The name of the template to render
+ *
+ * returns
+ * -- {*Page}  The page data
+ * -- {error}  Error is nil if the body was loaded successfully
+ */
+func getPage(title string, templateName string) (*Page, error) {
+
+	body, err := ioutil.ReadFile(getTemplatePath(templateName));
+
+	return &Page{ Body: body, Title: title }, err;
+}
+
+
+/**
+ * getTemplatePath
+ * Get the full path to the template
+ *
+ * params
+ * -- templateName {string}
+ *
+ * returns
+ * -- {string}
+ */
+func getTemplatePath(templateName string) string {
+
+	return filepath.Join(
+		filepath.Base("."),
+		"views",
+		templateName + ".html",
+	);
+}
 

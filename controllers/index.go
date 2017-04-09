@@ -22,5 +22,5 @@ func Homepage(ctx *Context) {
 			Cool: "Foobar",
 		};
 
-	ctx.render("index", options);
+	ctx.Render("index", options);
 }
