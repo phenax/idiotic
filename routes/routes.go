@@ -3,6 +3,7 @@ package routes;
 
 import (
 	"net/http"
+	"github.com/gorilla/mux"
 	ctrlr "github.com/phenax/idiotic/controllers"
 )
 
@@ -10,8 +11,13 @@ import (
 // Initialize the routes
 func init() {
 
+	router := mux.NewRouter();
+
 	// Index route
-	http.HandleFunc("/", ctrlr.Call(ctrlr.Homepage));
+	router.HandleFunc("/", ctrlr.Call(ctrlr.Homepage));
+
+	// start with the base
+	http.Handle("/", router);
 }
 
 

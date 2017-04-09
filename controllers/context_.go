@@ -3,9 +3,12 @@ package controllers;
 
 import (
 	"fmt"
-	// "log"
+	"log"
 	"net/http"
-	// "html/template"
+	"path/filepath"
+	"io/ioutil"
+	// "github.com/gorilla/mux"
+	"html/template"
 )
 
 
@@ -45,15 +48,32 @@ func (ctx *Context) send(str string) {
  */
 func (ctx *Context) render(templateName string) {
 
-	// tmpl, err :=
-	// 	template.
-	// 		New("poo").
-	// 		Parse(`{{define "T"}}Hello, {{.}}!{{end}}`);
+	templatePath := filepath.Join(filepath.Base("."), "views", templateName + ".html");
 
-	// err = tmpl.ExecuteTemplate(ctx.res, "T", template.HTML("<em>Heloo</em>"));
+	templateContent, err := ioutil.ReadFile(templatePath);
 
-	// if(err != nil) {
-	// 	log.Fatal("Fuck");
-	// }
+	if(err != nil) {
+		log.Fatal(err);
+		return;
+	}
+
+	tmpl, err :=
+		template.
+			New("poo").
+			Parse(string(templateContent[:]));
+
+	options := struct{
+		Cool string;
+	}{
+		Cool: "ness",
+	};
+
+	err = tmpl.ExecuteTemplate(ctx.res, "Wrapper", options);
+
+	if(err != nil) {
+		log.Fatal(err);
+	}
 }
+
+
 
