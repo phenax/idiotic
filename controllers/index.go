@@ -30,6 +30,44 @@ func HomePage(ctx *Context) {
 }
 
 
+
+/**
+ * Send json test data to the client
+ *
+ * params
+ * -- ctx {*Context}
+ */
+func JSONTest(ctx *Context) {
+
+	type Product struct {
+		Id int;
+		Name string;
+	};
+
+	type Response struct {
+		Access bool;
+		Products []*Product;
+	};
+
+	obj := &Response{
+		Access: true,
+		Products: []*Product{
+			&Product{
+				Id: 1,
+				Name: "Soap",
+			},
+			&Product{
+				Id: 2,
+				Name: "Shampoo",
+			},
+		},
+	};
+
+	ctx.JSON(obj);
+}
+
+
+
 /**
  * Testing gzip compression on a string of content
  *

@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"github.com/gorilla/mux"
 	"html/template"
+	"encoding/json"
 );
 
 
@@ -105,6 +106,32 @@ func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
 	config.Body = str;
 
 	ctx.Respond(config);
+}
+
+
+
+func (ctx *Context) JSON(obj interface{}, configs ...*ResponseConfig) {
+
+	jsonContent, err := json.Marshal(obj);
+
+	var config *ResponseConfig;
+
+	// Default to just status code config
+	if(len(configs) > 0) {
+		config = configs[0];
+	} else {
+		config = &ResponseConfig{
+			StatusCode: 200,
+		};
+	}
+
+	if(err != nil) {
+		config.StatusCode = 500;
+	}
+
+	config.ContentType = "application/json";
+
+	ctx.Send(string(jsonContent), config);
 }
 
 

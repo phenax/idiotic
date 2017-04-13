@@ -33,6 +33,9 @@ func indexRoutes(router *mux.Router) {
 	// Homepage
 	router.HandleFunc("/", ctrlr.Call(ctrlr.HomePage, router));
 
+	// json test
+	router.HandleFunc("/json", ctrlr.Call(ctrlr.JSONTest, router));
+
 	// gzip test
 	router.HandleFunc("/gzip", ctrlr.Call(ctrlr.GzipTest, router));
 
