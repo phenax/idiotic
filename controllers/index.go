@@ -3,6 +3,7 @@ package controllers;
 
 import (
 	"github.com/phenax/idiotic/libs"
+	// "errors"
 	// "net/http"
 	// "fmt"
 	// "reflect"
@@ -49,7 +50,7 @@ func GzipTest(ctx *Context) {
 	gzipppedContent, err := libs.GzipString(content);
 
 	if(err != nil) {
-		ctx.Send("Error", &ResponseConfig{});
+		ctx.ErrorMessage(500, err);
 	}
 
 	ctx.Send(string(gzipppedContent), &ResponseConfig{

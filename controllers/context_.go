@@ -38,18 +38,19 @@ type ResponseConfig struct {
 }
 
 
-func getConf(config *ResponseConfig, key string, value string) string {
 
 
-	if value == "" {
+func (ctx *Context) ApplyConfig(config *ResponseConfig) {
 
-		configType := reflect.TypeOf(*config)
+	headers := ctx.res.Header();
 
-		field, _ := configType.FieldByName(key)
-		value = field.Tag.Get("default")
+	// Set the content type
+	headers.Set("Content-Type", getConf(config, "ContentType", config.ContentType));
+
+	// Apply encoding
+	if(config.ContentEncoding != "") {
+		headers.Set("Content-Encoding", config.ContentEncoding);
 	}
-
-	return value;
 }
 
 
@@ -58,21 +59,13 @@ func getConf(config *ResponseConfig, key string, value string) string {
  * Writes a string of html to response
  *
  * params
- * -- str {string}  The string to send
+ * -- str  {string}  The string to send
+ * -- ...config  {*ResponseConfig}  Optional configuration
  */
 func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
 
 	if(len(configs) > 0) {
-		config := configs[0];
-		headers := ctx.res.Header();
-
-		// Set the content type
-		headers.Set("Content-Type", getConf(config, "ContentType", config.ContentType));
-
-		// Apply encoding
-		if(config.ContentEncoding != "") {
-			headers.Set("Content-Encoding", config.ContentEncoding);
-		}
+		ctx.ApplyConfig(configs[0]);
 	}
 
 	fmt.Fprint(ctx.res, str);
@@ -121,6 +114,20 @@ func (ctx *Context) Render(templateName string, data interface{}) {
 
 
 /**
+ * Send an error message
+ */
+func (ctx *Context) ErrorMessage(number int, err error) {
+	ctx.res.WriteHeader(number);
+	ctx.Send(err.Error());
+}
+
+
+
+
+
+
+
+/**
  * getTemplatePath
  * Get the full path to the template
  *
@@ -137,5 +144,20 @@ func getTemplatePath(templateName string) string {
 		"views",
 		templateName + ".html",
 	);
+}
+
+
+func getConf(config *ResponseConfig, key string, value string) string {
+
+
+	if value == "" {
+
+		configType := reflect.TypeOf(*config)
+
+		field, _ := configType.FieldByName(key)
+		value = field.Tag.Get("default")
+	}
+
+	return value;
 }
 
