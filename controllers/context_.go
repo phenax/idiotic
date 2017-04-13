@@ -29,7 +29,13 @@ type Context struct {
 
 
 
-
+/**
+ * Craft a custom response
+ * TODO: Docs
+ *
+ * fields
+ * -- 
+ */
 type ResponseConfig struct {
 
 	StatusCode int;
@@ -42,7 +48,12 @@ type ResponseConfig struct {
 
 
 
-
+/**
+ * Respond to the request using the config
+ *
+ * params
+ * -- config {*ResponseConfig}
+ */
 func (ctx *Context) Respond(config *ResponseConfig) {
 
 	headers := ctx.res.Header();
@@ -64,10 +75,12 @@ func (ctx *Context) Respond(config *ResponseConfig) {
 
 	ctx.res.WriteHeader(status);
 
+	// Response body
 	if(config.Body != "") {
 		fmt.Fprint(ctx.res, config.Body);
 	}
 }
+
 
 
 /**
@@ -92,6 +105,7 @@ func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
 
 	ctx.Respond(config);
 }
+
 
 
 
@@ -173,6 +187,9 @@ func getTemplatePath(templateName string) string {
 }
 
 
+/**
+ * Get config and apply the default value(if any)
+ */
 func getConf(config *ResponseConfig, key string, value string) string {
 
 
