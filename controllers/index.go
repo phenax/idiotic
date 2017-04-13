@@ -51,6 +51,7 @@ func GzipTest(ctx *Context) {
 
 	if(err != nil) {
 		ctx.ErrorMessage(500, err);
+		return;
 	}
 
 	ctx.Send(string(gzipppedContent), &ResponseConfig{

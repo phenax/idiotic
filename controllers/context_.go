@@ -4,7 +4,7 @@ package controllers;
 import (
 	"fmt"
 	"bytes"
-	// "log"
+	"log"
 	"reflect"
 	"net/http"
 	"path/filepath"
@@ -32,6 +32,9 @@ type Context struct {
 
 type ResponseConfig struct {
 
+	StatusCode int;
+	Body string;
+
 	ContentType string `default:"text/plain; charset=utf-8"`;
 
 	ContentEncoding string;
@@ -40,7 +43,7 @@ type ResponseConfig struct {
 
 
 
-func (ctx *Context) ApplyConfig(config *ResponseConfig) {
+func (ctx *Context) Respond(config *ResponseConfig) {
 
 	headers := ctx.res.Header();
 
@@ -50,6 +53,19 @@ func (ctx *Context) ApplyConfig(config *ResponseConfig) {
 	// Apply encoding
 	if(config.ContentEncoding != "") {
 		headers.Set("Content-Encoding", config.ContentEncoding);
+	}
+
+
+	// Status code
+	status := 200;
+	if(config.StatusCode != 0) {
+		status = config.StatusCode;
+	}
+
+	ctx.res.WriteHeader(status);
+
+	if(config.Body != "") {
+		fmt.Fprint(ctx.res, config.Body);
 	}
 }
 
@@ -64,11 +80,17 @@ func (ctx *Context) ApplyConfig(config *ResponseConfig) {
  */
 func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
 
+	var config *ResponseConfig;
+
 	if(len(configs) > 0) {
-		ctx.ApplyConfig(configs[0]);
+		config = configs[0];
+	} else {
+		config = &ResponseConfig{ StatusCode: 200 };
 	}
 
-	fmt.Fprint(ctx.res, str);
+	config.Body = str;
+
+	ctx.Respond(config);
 }
 
 
@@ -116,8 +138,12 @@ func (ctx *Context) Render(templateName string, data interface{}) {
 /**
  * Send an error message
  */
-func (ctx *Context) ErrorMessage(number int, err error) {
-	ctx.res.WriteHeader(number);
+func (ctx *Context) ErrorMessage(statusCode int, err error) {
+
+	fmt.Println("Error " + string(statusCode))
+	log.Fatal(err);
+
+	ctx.res.WriteHeader(statusCode);
 	ctx.Send(err.Error());
 }
 
