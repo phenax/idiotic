@@ -176,8 +176,9 @@ func (ctx *Context) ErrorMessage(statusCode int, err error) {
 	fmt.Println("Error " + string(statusCode))
 	log.Fatal(err);
 
-	ctx.res.WriteHeader(statusCode);
-	ctx.Send(err.Error());
+	ctx.Send(err.Error(), &ResponseConfig{
+		StatusCode: statusCode,
+	});
 }
 
 
