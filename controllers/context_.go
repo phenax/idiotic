@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"io/ioutil"
-	// "github.com/gorilla/mux"
+	"github.com/gorilla/mux"
 	"html/template"
 );
 
@@ -22,9 +22,10 @@ import (
  * -- req {*http.Request}
  */
 type Context struct {
-	res http.ResponseWriter;
-	req *http.Request;
-	params map[string]string;
+	Response http.ResponseWriter;
+	Request *http.Request;
+	Router *mux.Router;
+	Params map[string]string;
 };
 
 
@@ -42,7 +43,6 @@ type ResponseConfig struct {
 	Body string;
 
 	ContentType string `default:"text/plain; charset=utf-8"`;
-
 	ContentEncoding string;
 }
 
@@ -56,7 +56,7 @@ type ResponseConfig struct {
  */
 func (ctx *Context) Respond(config *ResponseConfig) {
 
-	headers := ctx.res.Header();
+	headers := ctx.Response.Header();
 
 	// Set the content type
 	headers.Set("Content-Type", getConf(config, "ContentType", config.ContentType));
@@ -73,11 +73,11 @@ func (ctx *Context) Respond(config *ResponseConfig) {
 		status = config.StatusCode;
 	}
 
-	ctx.res.WriteHeader(status);
+	ctx.Response.WriteHeader(status);
 
 	// Response body
 	if(config.Body != "") {
-		fmt.Fprint(ctx.res, config.Body);
+		fmt.Fprint(ctx.Response, config.Body);
 	}
 }
 
@@ -141,7 +141,7 @@ func (ctx *Context) Render(templateName string, data interface{}, configs ...*Re
 
 	// Throw error if no template found
 	if(err != nil) {
-		fmt.Fprint(ctx.res, "Didnt render");
+		fmt.Fprint(ctx.Response, "Didnt render");
 		return;
 	}
 
@@ -152,7 +152,7 @@ func (ctx *Context) Render(templateName string, data interface{}, configs ...*Re
 	buf := new(bytes.Buffer);
 
 	if err := tpl.ExecuteTemplate(buf, "homepage", data); err != nil {
-		fmt.Fprint(ctx.res, "Didnt render");
+		fmt.Fprint(ctx.Response, "Didnt render");
 		return;
 	}
 

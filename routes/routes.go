@@ -31,17 +31,17 @@ func init() {
 func indexRoutes(router *mux.Router) {
 
 	// Homepage
-	router.HandleFunc("/", ctrlr.Call(ctrlr.HomePage));
+	router.HandleFunc("/", ctrlr.Call(ctrlr.HomePage, router));
 
 	// gzip test
-	router.HandleFunc("/gzip", ctrlr.Call(ctrlr.GzipTest));
+	router.HandleFunc("/gzip", ctrlr.Call(ctrlr.GzipTest, router));
 
 }
 
 func userRoutes(router *mux.Router) {
 
 	// Profile page
-	router.HandleFunc("/user/{name}", ctrlr.Call(ctrlr.ProfilePage));
+	router.HandleFunc("/user/{name}", ctrlr.Call(ctrlr.ProfilePage, router));
 }
 
 

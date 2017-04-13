@@ -22,6 +22,8 @@ import (
 type StaticConfig struct {
 	Pathprefix string;
 	Directory string;
+
+	Response *ResponseConfig;
 };
 
 
@@ -36,7 +38,7 @@ type StaticConfig struct {
  * returns
  * -- {func(http.ResponseWriter, *http.Request)}
  */
-func Call(ctrlrFn func(*Context)) func(http.ResponseWriter, *http.Request) {
+func Call(ctrlrFn func(*Context), router *mux.Router) func(http.ResponseWriter, *http.Request) {
 
 
 	/**
@@ -50,9 +52,10 @@ func Call(ctrlrFn func(*Context)) func(http.ResponseWriter, *http.Request) {
 
 		// Create a context
 		ctx := &Context{
-			res: res,
-			req: req,
-			params: mux.Vars(req),
+			Response: res,
+			Request: req,
+			Router: router,
+			Params: mux.Vars(req),
 		};
 
 		// Call the controller
@@ -79,11 +82,14 @@ func StaticRouter(router *mux.Router, options *StaticConfig) (*mux.Route) {
 	defaultConfig := &StaticConfig{
 		Pathprefix: "/public",
 		Directory: "./public",
+
+		Response: &ResponseConfig{},
 	};
 
 
 	pathprefix := options.Pathprefix;
 	directory := options.Directory;
+	response := options.Response;
 
 	if(pathprefix == "") {
 		pathprefix = defaultConfig.Pathprefix;
@@ -91,6 +97,10 @@ func StaticRouter(router *mux.Router, options *StaticConfig) (*mux.Route) {
 
 	if(directory == "") {
 		directory = defaultConfig.Directory;
+	}
+
+	if(response == nil) {
+		response = defaultConfig.Response;
 	}
 
 	return router.
