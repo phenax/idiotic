@@ -3,13 +3,14 @@ package controllers;
 
 import (
 	"fmt"
+	"bytes"
 	// "log"
 	// "reflect"
 	"net/http"
 	"path/filepath"
-	// "io/ioutil"
+	"io/ioutil"
 	// "github.com/gorilla/mux"
-	// "html/template"
+	"html/template"
 );
 
 
@@ -67,15 +68,27 @@ func (ctx *Context) Write(data []byte) {
  * params
  * -- templateName {string}   Name of the template to render
  */
-func (ctx *Context) Render(templateName string) {
+func (ctx *Context) Render(templateName string, data interface{}) {
 
-	// buf := new(bytes.Buffer)
-	// if err := tpl.ExecuteTemplate(buf, name, data); err != nil {
-	// 	rest.ServerError(w, r, err)
-	// 	return
-	// }
-	// w.Write(buf.Bytes())
-	
+	html, err := ioutil.ReadFile(getTemplatePath(templateName));
+
+	if(err != nil) {
+		fmt.Fprint(ctx.res, "Didnt render");
+		return;
+	}
+
+	tpl := template.Must(template.New("homepage").Parse(string(html)));
+
+	buf := new(bytes.Buffer);
+
+	if err := tpl.ExecuteTemplate(buf, "homepage", data); err != nil {
+		fmt.Fprint(ctx.res, "Didnt render");
+		return;
+	}
+
+	ctx.res.Header().Set("Content-Type", "text/html; charset=utf-8");
+
+	ctx.res.Write(buf.Bytes());
 }
 
 
