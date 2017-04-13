@@ -13,14 +13,14 @@ func init() {
 
 	router := mux.NewRouter();
 	indexRoutes(router);
+	userRoutes(router);
 
 
-	config := &ctrlr.StaticConfig{
+	// Add static router
+	ctrlr.StaticRouter(router, &ctrlr.StaticConfig{
 		Pathprefix: "/public",
 		Directory: "./public",
-	};
-
-	ctrlr.StaticRouter(router, config);
+	});
 
 	// start with the base
 	http.Handle("/", router);
@@ -31,10 +31,14 @@ func init() {
 func indexRoutes(router *mux.Router) {
 
 	// Homepage
-	router.HandleFunc("/{name}", ctrlr.Call(ctrlr.Homepage)).Methods("GET");
-	router.HandleFunc("/people/{name}", ctrlr.Call(ctrlr.Homepage));
+	router.HandleFunc("/", ctrlr.Call(ctrlr.HomePage));
 
 }
 
+func userRoutes(router *mux.Router) {
+
+	// Profile page
+	router.HandleFunc("/user/{name}", ctrlr.Call(ctrlr.ProfilePage));
+}
 
 
