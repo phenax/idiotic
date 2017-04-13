@@ -95,6 +95,7 @@ func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
 
 	var config *ResponseConfig;
 
+	// Default to just status code config
 	if(len(configs) > 0) {
 		config = configs[0];
 	} else {
@@ -116,7 +117,24 @@ func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
  * params
  * -- templateName {string}   Name of the template to render
  */
-func (ctx *Context) Render(templateName string, data interface{}) {
+func (ctx *Context) Render(templateName string, data interface{}, configs ...*ResponseConfig) {
+
+	var config *ResponseConfig;
+
+	// Default to just status code config
+	if(len(configs) > 0) {
+		config = configs[0];
+	} else {
+		config = &ResponseConfig{
+			StatusCode: 200,
+		};
+	}
+
+	// IF the content type is not set, default it to html
+	if(config.ContentType == "") {
+		config.ContentType = "text/html; charset=utf-8";
+	}
+
 
 	// Open the template file
 	html, err := ioutil.ReadFile(getTemplatePath(templateName));
@@ -138,9 +156,10 @@ func (ctx *Context) Render(templateName string, data interface{}) {
 		return;
 	}
 
-	// Write it to the response
-	ctx.res.Header().Set("Content-Type", "text/html; charset=utf-8");
-	ctx.res.Write(buf.Bytes());
+	config.Body = string(buf.Bytes());
+
+	// Respond with the stuff
+	ctx.Respond(config);
 }
 
 
