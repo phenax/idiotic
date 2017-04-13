@@ -104,3 +104,6 @@ func StaticRouter(router *mux.Router, options *StaticConfig) (*mux.Route) {
 }
 
 
+
+
+

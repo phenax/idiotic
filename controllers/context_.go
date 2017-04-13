@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"bytes"
 	// "log"
-	// "reflect"
+	"reflect"
 	"net/http"
 	"path/filepath"
 	"io/ioutil"
@@ -28,6 +28,31 @@ type Context struct {
 };
 
 
+
+
+type ResponseConfig struct {
+
+	ContentType string `default:"text/plain; charset=utf-8"`;
+
+	ContentEncoding string;
+}
+
+
+func getConf(config *ResponseConfig, key string, value string) string {
+
+
+	if value == "" {
+
+		configType := reflect.TypeOf(*config)
+
+		field, _ := configType.FieldByName(key)
+		value = field.Tag.Get("default")
+	}
+
+	return value;
+}
+
+
 /**
  * ctx.Send
  * Writes a string of html to response
@@ -35,30 +60,24 @@ type Context struct {
  * params
  * -- str {string}  The string to send
  */
-func (ctx *Context) Send(str string) {
+func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
+
+	if(len(configs) > 0) {
+		config := configs[0];
+		headers := ctx.res.Header();
+
+		// Set the content type
+		headers.Set("Content-Type", getConf(config, "ContentType", config.ContentType));
+
+		// Apply encoding
+		if(config.ContentEncoding != "") {
+			headers.Set("Content-Encoding", config.ContentEncoding);
+		}
+	}
 
 	fmt.Fprint(ctx.res, str);
 }
 
-
-/**
- * Write some data to the response
- * 
- * params
- * -- data {[]byte}  Data to write to the response
- */
-func (ctx *Context) Write(data []byte) {
-
-	header := ctx.res.Header();
-
-	if header.Get("Content-Type") == "" {
-		header.Set("Content-Type", http.DetectContentType(data));
-	}
-
-	header.Del("Content-Length");
-
-	fmt.Fprint(ctx.res, data);
-}
 
 
 /**
@@ -70,15 +89,19 @@ func (ctx *Context) Write(data []byte) {
  */
 func (ctx *Context) Render(templateName string, data interface{}) {
 
+	// Open the template file
 	html, err := ioutil.ReadFile(getTemplatePath(templateName));
 
+	// Throw error if no template found
 	if(err != nil) {
 		fmt.Fprint(ctx.res, "Didnt render");
 		return;
 	}
 
+	// Parse template
 	tpl := template.Must(template.New("homepage").Parse(string(html)));
 
+	// The template content
 	buf := new(bytes.Buffer);
 
 	if err := tpl.ExecuteTemplate(buf, "homepage", data); err != nil {
@@ -86,8 +109,8 @@ func (ctx *Context) Render(templateName string, data interface{}) {
 		return;
 	}
 
+	// Write it to the response
 	ctx.res.Header().Set("Content-Type", "text/html; charset=utf-8");
-
 	ctx.res.Write(buf.Bytes());
 }
 

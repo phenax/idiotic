@@ -33,6 +33,9 @@ func indexRoutes(router *mux.Router) {
 	// Homepage
 	router.HandleFunc("/", ctrlr.Call(ctrlr.HomePage));
 
+	// gzip test
+	router.HandleFunc("/gzip", ctrlr.Call(ctrlr.GzipTest));
+
 }
 
 func userRoutes(router *mux.Router) {
