@@ -9,15 +9,17 @@ import (
 
 
 const (
-	Host = "0.0.0.0";
-	Port = "8080";
+	// The host for the server
+	host = "0.0.0.0";
+	// The server port to listen to
+	port = "8080";
 );
 
 
 func main() {
 
-	fmt.Println(`Server has started on ` + Host + ":" + Port);
+	fmt.Println("Server has started on " + host + ":" + port);
 
 	// Start the server
-	http.ListenAndServe(Host + ":" + Port, nil);
+	http.ListenAndServe(host + ":" + port, nil);
 }

@@ -13,11 +13,19 @@ func init() {
 
 	router := mux.NewRouter();
 
-	// Index route
-	router.HandleFunc("/", ctrlr.Call(ctrlr.Homepage));
+	indexRoutes(router);
 
 	// start with the base
 	http.Handle("/", router);
+}
+
+
+func indexRoutes(router *mux.Router) {
+
+	// Homepage
+	router.HandleFunc("/{name}", ctrlr.Call(ctrlr.Homepage)).Methods("GET");
+	router.HandleFunc("/people/{name}", ctrlr.Call(ctrlr.Homepage));
+
 }
 
 

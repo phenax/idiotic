@@ -4,12 +4,13 @@ package controllers;
 import (
 	"fmt"
 	"log"
+	// "reflect"
 	"net/http"
 	"path/filepath"
 	"io/ioutil"
 	// "github.com/gorilla/mux"
 	"html/template"
-)
+);
 
 
 /**
@@ -22,6 +23,7 @@ import (
 type Context struct {
 	res http.ResponseWriter;
 	req *http.Request;
+	params map[string]string;
 };
 
 
@@ -59,6 +61,7 @@ func (ctx *Context) Send(str string) {
  * -- templateName {string}   Name of the template to render
  */
 func (ctx *Context) Render(templateName string, options interface{}) {
+
 
 	// The path of the template
 	wrapperPath := getTemplatePath("wrapper");

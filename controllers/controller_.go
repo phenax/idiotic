@@ -3,6 +3,7 @@ package controllers;
 
 import (
 	"net/http"
+	"github.com/gorilla/mux"
 )
 
 
@@ -31,6 +32,7 @@ func Call(ctrlrFn func(*Context)) func(http.ResponseWriter, *http.Request) {
 		ctx := &Context{
 			res: res,
 			req: req,
+			params: mux.Vars(req),
 		};
 
 		// Call the controller
