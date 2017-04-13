@@ -2,6 +2,11 @@
 package controllers;
 
 import (
+	// "bytes"
+	// "time"
+	// "fmt"
+	// "io/ioutil"
+	// "strings"
 	"net/http"
 	"github.com/gorilla/mux"
 )
@@ -40,5 +45,32 @@ func Call(ctrlrFn func(*Context)) func(http.ResponseWriter, *http.Request) {
 	};
 }
 
+
+
+type StaticConfig struct {
+	Pathprefix string;
+	Directory string;
+};
+
+func StaticRouter(router *mux.Router, options *StaticConfig) (*mux.Route) {
+
+	pathprefix := options.Pathprefix;
+	directory := options.Directory;
+
+	if(pathprefix == "") {
+		pathprefix = "/public";
+	}
+
+	if(directory == "") {
+		directory = "./public";
+	}
+
+	return router.PathPrefix(pathprefix).Handler(
+		http.StripPrefix(
+			pathprefix,
+			http.FileServer(http.Dir(directory)),
+		),
+	);
+}
 
 

@@ -3,13 +3,13 @@ package controllers;
 
 import (
 	"fmt"
-	"log"
+	// "log"
 	// "reflect"
 	"net/http"
 	"path/filepath"
-	"io/ioutil"
+	// "io/ioutil"
 	// "github.com/gorilla/mux"
-	"html/template"
+	// "html/template"
 );
 
 
@@ -28,21 +28,7 @@ type Context struct {
 
 
 /**
- * The page related data
- *
- * fields
- * -- Title {string}  The title of the page
- * -- Body  {[]byte}  The content to go inside the body
- */
-type Page struct {
-	Title string;
-	Body []byte;
-}
-
-
-
-/**
- * ctx.send
+ * ctx.Send
  * Writes a string of html to response
  *
  * params
@@ -53,66 +39,49 @@ func (ctx *Context) Send(str string) {
 	fmt.Fprint(ctx.res, str);
 }
 
+
 /**
- * ctx.render
+ * Write some data to the response
+ * 
+ * params
+ * -- data {[]byte}  Data to write to the response
+ */
+func (ctx *Context) Write(data []byte) {
+
+	header := ctx.res.Header();
+
+	if header.Get("Content-Type") == "" {
+		header.Set("Content-Type", http.DetectContentType(data));
+	}
+
+	header.Del("Content-Length");
+
+	fmt.Fprint(ctx.res, data);
+}
+
+
+/**
+ * ctx.Render
  * Render a template and write to response
  *
  * params
  * -- templateName {string}   Name of the template to render
  */
-func (ctx *Context) Render(templateName string, options interface{}) {
+func (ctx *Context) Render(templateName string) {
 
-
-	// The path of the template
-	wrapperPath := getTemplatePath("wrapper");
-
-	page, err := getPage("Coolness", templateName);
-
-	if(err != nil) {
-		log.Fatal(err);
-		return;
-	}
-
-	// Parse the template
-	tmpl, err := template.ParseFiles(wrapperPath);
-
-	// If couldnt read
-	if(err != nil) {
-		log.Fatal(err);
-		return;
-	}
-
-	// Render the template
-	err = tmpl.ExecuteTemplate(ctx.res, "Wrapper", page);
-
-	if(err != nil) {
-		log.Fatal(err);
-	}
+	// buf := new(bytes.Buffer)
+	// if err := tpl.ExecuteTemplate(buf, name, data); err != nil {
+	// 	rest.ServerError(w, r, err)
+	// 	return
+	// }
+	// w.Write(buf.Bytes())
+	
 }
 
 
 
 
 
-
-/**
- * getPage
- * Create a new Page instance
- *
- * params
- * -- title {string}  The title of the page
- * -- templateName {string}  The name of the template to render
- *
- * returns
- * -- {*Page}  The page data
- * -- {error}  Error is nil if the body was loaded successfully
- */
-func getPage(title string, templateName string) (*Page, error) {
-
-	body, err := ioutil.ReadFile(getTemplatePath(templateName));
-
-	return &Page{ Body: body, Title: title }, err;
-}
 
 
 /**

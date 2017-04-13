@@ -12,11 +12,19 @@ import (
 func init() {
 
 	router := mux.NewRouter();
-
 	indexRoutes(router);
+
+
+	config := &ctrlr.StaticConfig{
+		Pathprefix: "/public",
+		Directory: "./public",
+	};
+
+	ctrlr.StaticRouter(router, config);
 
 	// start with the base
 	http.Handle("/", router);
+
 }
 
 

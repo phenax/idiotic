@@ -35,5 +35,6 @@ func Homepage(ctx *Context) {
 	// 		Cool: "Foobar",
 	// 	};
 
-	// ctx.Render("index", options);
+
+	// ctx.Render("index");
 }
