@@ -3,7 +3,6 @@ package controllers;
 
 import (
 	"github.com/phenax/idiotic/libs"
-	"github.com/phenax/idiotic/config"
 	"github.com/phenax/idiotic/models"
 	// "errors"
 	// "net/http"
@@ -20,24 +19,16 @@ import (
  */
 func HomePage(ctx *Context) {
 
-	db, err := config.GetDB();
-
-	if(err != nil) {
-		fmt.Println(err);
-	}
-
 	var users []models.User;
 
-	usersCollection := db.C("users");
+	// models.Users.Insert(models.NewUser(&models.User{
+	// 	Name: "Bruce Wayne",
+	// 	Username: "brucey",
+	// 	Email: "bruce@wayne.com",
+	// 	Password: "This is pretty guuud",
+	// }));
 
-	// usersCollection.Insert(&models.User{
-	// 	Name: "Akshay Nair",
-	// 	Username: "batman",
-	// 	Email: "phenax5@gmail.com",
-	// 	Password: "Hello world",
-	// });
-
-	usersCollection.Find(nil).All(&users);
+	models.Users.Find(nil).All(&users);
 
 	fmt.Println(users);
 

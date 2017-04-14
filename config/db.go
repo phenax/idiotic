@@ -51,7 +51,7 @@ func GetConnection(prods ...bool) (*mgo.Session, error) {
 
 	// Production connection
 	if(prod) {
-		config = GetProdConfig();
+		config = nil;// GetProdConfig();
 	} else {
 		config = GetConfig();
 	}
