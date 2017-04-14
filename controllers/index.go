@@ -3,7 +3,7 @@ package controllers;
 
 import (
 	"github.com/phenax/idiotic/libs"
-	// "github.com/phenax/idiotic/models"
+	"github.com/phenax/idiotic/models"
 	// "labix.org/v2/mgo/bson"
 	// "errors"
 	// "net/http"
@@ -20,14 +20,18 @@ import (
  */
 func HomePage(ctx *Context) {
 
+	var users []models.User;
+
+	models.Users.Find(nil).All(&users);
 
 	options :=
 		struct{
 			Cool string;
+			Users []models.User;
 		}{
 			Cool: "Foobar",
+			Users: users,
 		};
-
 
 	ctx.Render("index", options);
 }

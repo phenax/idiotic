@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Stuff</title>
+	<title>home page</title>
+
+	<style>
+		html, body {
+			color: #333;
+		}
+	</style>
 </head>
 <body>
+
 	<h3>Hello World!</h3>
-	<div>
-		Cool stuff
-		<em>Thgis is sparta! {{.Cool}}</em>
-	</div>
+
+	<ul>
+		{{range .Users}}
+			<li>
+				<span>{{.Name}}</span>
+				(<span style='color: #888;'>@{{.Username}}</span>)
+			</li>
+		{{end}}
+	</ul>
 </body>
 </html>
