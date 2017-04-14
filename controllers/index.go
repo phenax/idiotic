@@ -4,6 +4,7 @@ package controllers;
 import (
 	"github.com/phenax/idiotic/libs"
 	"github.com/phenax/idiotic/models"
+	"labix.org/v2/mgo/bson"
 	// "errors"
 	// "net/http"
 	"fmt"
@@ -28,7 +29,7 @@ func HomePage(ctx *Context) {
 	// 	Password: "This is pretty guuud",
 	// }));
 
-	models.Users.Find(nil).All(&users);
+	models.Users.Find(bson.M{ "name": "Bruce Wayne" }).One(&users);
 
 	fmt.Println(users);
 
