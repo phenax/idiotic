@@ -3,11 +3,11 @@ package controllers;
 
 import (
 	"github.com/phenax/idiotic/libs"
-	"github.com/phenax/idiotic/models"
-	"labix.org/v2/mgo/bson"
+	// "github.com/phenax/idiotic/models"
+	// "labix.org/v2/mgo/bson"
 	// "errors"
 	// "net/http"
-	"fmt"
+	// "fmt"
 	// "reflect"
 	// "github.com/gorilla/mux"
 )
@@ -20,18 +20,6 @@ import (
  */
 func HomePage(ctx *Context) {
 
-	var users []models.User;
-
-	// models.Users.Insert(models.NewUser(&models.User{
-	// 	Name: "Bruce Wayne",
-	// 	Username: "brucey",
-	// 	Email: "bruce@wayne.com",
-	// 	Password: "This is pretty guuud",
-	// }));
-
-	models.Users.Find(bson.M{ "name": "Bruce Wayne" }).One(&users);
-
-	fmt.Println(users);
 
 	options :=
 		struct{

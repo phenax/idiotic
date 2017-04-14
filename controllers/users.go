@@ -2,21 +2,30 @@
 package controllers;
 
 import (
-
+	"github.com/phenax/idiotic/models"
+	"labix.org/v2/mgo/bson"
 );
 
 
 func ProfilePage(ctx *Context) {
 
-	var title string;
+	var user models.User;
 
-	if(ctx.Params["name"] != "") {
-		title = "<h1>Hey, " + ctx.Params["name"] + "</h1>";
-	} else {
-		title = "<h1>This is cool</h1>";
+	username := ctx.Params["name"];
+
+	models.
+		Users.Find(bson.M{
+			"username": username,
+		}).One(&user);
+
+	if(user == nil) {
+		ctx.Send("No user with that username");
+		return;
 	}
 
-	ctx.Send(title, &ResponseConfig{
+	config := &ResponseConfig{
 		ContentType: "text/html",
-	});
+	};
+
+	ctx.Render("user", user, config);
 }
