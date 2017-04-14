@@ -18,7 +18,7 @@ func ProfilePage(ctx *Context) {
 			"username": username,
 		}).One(&user);
 
-	if(user == nil) {
+	if(user.Username == "") {
 		ctx.Send("No user with that username");
 		return;
 	}
