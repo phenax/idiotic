@@ -3,6 +3,8 @@ node_modules
 
 idiotic
 
+config/db.prod.go
+
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a

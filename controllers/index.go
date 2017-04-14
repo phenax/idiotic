@@ -3,9 +3,11 @@ package controllers;
 
 import (
 	"github.com/phenax/idiotic/libs"
+	"github.com/phenax/idiotic/config"
+	"github.com/phenax/idiotic/models"
 	// "errors"
 	// "net/http"
-	// "fmt"
+	"fmt"
 	// "reflect"
 	// "github.com/gorilla/mux"
 )
@@ -17,6 +19,27 @@ import (
  * -- ctx {*Context}  Server request context
  */
 func HomePage(ctx *Context) {
+
+	db, err := config.GetDB();
+
+	if(err != nil) {
+		fmt.Println(err);
+	}
+
+	var users []models.User;
+
+	usersCollection := db.C("users");
+
+	// usersCollection.Insert(&models.User{
+	// 	Name: "Akshay Nair",
+	// 	Username: "batman",
+	// 	Email: "phenax5@gmail.com",
+	// 	Password: "Hello world",
+	// });
+
+	usersCollection.Find(nil).All(&users);
+
+	fmt.Println(users);
 
 	options :=
 		struct{
