@@ -4,7 +4,7 @@ package controllers;
 import (
 	"fmt"
 	"bytes"
-	"log"
+	"strconv"
 	"reflect"
 	"net/http"
 	"path/filepath"
@@ -200,8 +200,7 @@ func (ctx *Context) Render(templateName string, data interface{}, configs ...*Re
  */
 func (ctx *Context) ErrorMessage(statusCode int, err error) {
 
-	fmt.Println("Error " + string(statusCode))
-	log.Fatal(err);
+	fmt.Println("Error " + strconv.Itoa(statusCode) + ": " + err.Error());
 
 	ctx.Send(err.Error(), &ResponseConfig{
 		StatusCode: statusCode,
