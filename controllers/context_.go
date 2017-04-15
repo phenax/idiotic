@@ -11,7 +11,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	// libs "github.com/phenax/idiotic/libs"
+	libs "github.com/phenax/idiotic/libs"
 )
 
 // Compiled templates go here
@@ -19,10 +19,33 @@ var compiledTemplates *template.Template
 
 func init() {
 
+	templateHelpers := template.FuncMap{
+
+		//
+		// Template helper function to get named router links
+		//
+		"GetLink": func(routeName string, fields ...string) string {
+
+			router := libs.GetRouter()
+
+			route, err := router.Get(routeName).URL(fields...)
+
+			if err != nil {
+				fmt.Println(err)
+				return ""
+			}
+
+			return route.String()
+		},
+	}
+
 	// Save it for the rest of eternity
 	compiledTemplates =
 		template.Must(
-			template.New("wrapper").ParseGlob(getTemplatePath("*")),
+			template.
+				New("wrapper").
+				Funcs(templateHelpers).
+				ParseGlob(getTemplatePath("*")),
 		)
 }
 

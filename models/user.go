@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/phenax/idiotic/db"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
@@ -32,27 +31,6 @@ type User struct {
 //
 func (user *User) SetPassword(password string) {
 	user.Password = password
-}
-
-//
-// ProfileLink - Get the profile link to the user
-//
-func (user *User) ProfileLink(router *mux.Router) func(users ...interface{}) string {
-
-	return func(users ...interface{}) string {
-
-		var username string
-
-		if len(users) > 0 {
-			username = users[0].(string)
-		} else {
-			username = user.Username
-		}
-
-		url, _ := router.Get("profile").URL("name", username)
-
-		return url.String()
-	}
 }
 
 // Users - User Collection
