@@ -37,14 +37,14 @@ func (user *User) SetPassword(password string) {
 //
 // ProfileLink - Get the profile link to the user
 //
-func (user *User) ProfileLink(router *mux.Router) func() string {
+func (user *User) ProfileLink(router *mux.Router) func(users ...interface{}) string {
 
 	return func(users ...interface{}) string {
 
 		var username string
 
 		if len(users) > 0 {
-			username = users[0]
+			username = users[0].(string)
 		} else {
 			username = user.Username
 		}

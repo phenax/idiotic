@@ -26,14 +26,14 @@ type UserWrapper struct {
 // returns
 // -- {string} The link to the profile
 //
-func (resp *UserWrapper) GetLink(users ...interface{}) string {
+func (resp UserWrapper) GetLink(users ...interface{}) string {
 
 	var username string
 
 	if len(users) > 0 {
-		username = users[0]
+		username = users[0].(string)
 	} else {
-		username = nil
+		username = ""
 	}
 
 	return resp.User.ProfileLink(resp.Ctx.Router)(username)

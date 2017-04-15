@@ -1,11 +1,9 @@
+package db
 
-package db;
-
-import (
-	"labix.org/v2/mgo"
-	"time"
-);
-
+// import (
+// "labix.org/v2/mgo"
+// "time"
+// );
 
 // // Uncomment this function for adding production config
 // func GetProdConfig() (*mgo.DialInfo) {

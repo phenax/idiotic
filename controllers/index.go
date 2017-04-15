@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"github.com/phenax/idiotic/libs"
-	"github.com/phenax/idiotic/models"
-	// "labix.org/v2/mgo/bson"
 	// "errors"
 	// "net/http"
 	// "fmt"
 	// "reflect"
+
+	// "labix.org/v2/mgo/bson"
+	"github.com/phenax/idiotic/libs"
+	"github.com/phenax/idiotic/models"
 	// "github.com/gorilla/mux"
 )
 
