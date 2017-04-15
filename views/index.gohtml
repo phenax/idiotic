@@ -16,8 +16,10 @@
 	<ul>
 		{{range .Users}}
 			<li>
-				<span>{{.Name}}</span>
-				(<span style='color: #888;'>@{{.Username}}</span>)
+				<a href='{{$getLink}}'>
+					<span>{{.Name}}</span>
+					(<span style='color: #888;'>@{{.Username}}</span>)
+				</a>
 			</li>
 		{{end}}
 	</ul>
