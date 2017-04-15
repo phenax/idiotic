@@ -19,32 +19,12 @@ var compiledTemplates *template.Template
 
 func init() {
 
-	templateHelpers := template.FuncMap{
-
-		//
-		// Template helper function to get named router links
-		//
-		"GetLink": func(routeName string, fields ...string) string {
-
-			router := libs.GetRouter()
-
-			route, err := router.Get(routeName).URL(fields...)
-
-			if err != nil {
-				fmt.Println(err)
-				return ""
-			}
-
-			return route.String()
-		},
-	}
-
 	// Save it for the rest of eternity
 	compiledTemplates =
 		template.Must(
 			template.
 				New("wrapper").
-				Funcs(templateHelpers).
+				Funcs(libs.TemplateHelpers).
 				ParseGlob(getTemplatePath("*")),
 		)
 }
