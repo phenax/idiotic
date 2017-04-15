@@ -11,12 +11,12 @@
 </head>
 <body>
 
-	<h3>Hello World! {{GetLink "profile" "username" "batman"}}</h3>
+	<h3>Hello World!</h3>
 
 	<ul>
 		{{range .Users}}
 			<li>
-				<a href='{{.Username}}'>
+				<a href='{{GetLink "profile" "name" .Username}}'>
 					<span>{{.Name}}</span>
 					(<span style='color: #888;'>@{{.Username}}</span>)
 				</a>
