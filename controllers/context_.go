@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"net/http"
 	"path/filepath"
 	"reflect"
@@ -13,6 +12,15 @@ import (
 
 	"github.com/gorilla/mux"
 )
+
+var compiledTemplates *template.Template
+
+func init() {
+	compiledTemplates =
+		template.Must(
+			template.New("homepage").ParseGlob(getTemplatePath("*")),
+		)
+}
 
 //
 // Context - The server context
@@ -155,22 +163,12 @@ func (ctx *Context) Render(templateName string, data interface{}, configs ...*Re
 		config.ContentType = "text/html; charset=utf-8"
 	}
 
-	// Open the template file
-	html, err := ioutil.ReadFile(getTemplatePath(templateName))
-
-	// Throw error if no template found
-	if err != nil {
-		fmt.Fprint(ctx.Response, "Didnt render")
-		return
-	}
-
-	// Parse template
-	tpl := template.Must(template.New("homepage").Parse(string(html)))
-
 	// The template content
 	buf := new(bytes.Buffer)
 
-	if err := tpl.ExecuteTemplate(buf, "homepage", data); err != nil {
+	err := compiledTemplates.ExecuteTemplate(buf, templateName+".gohtml", data)
+
+	if err != nil {
 		fmt.Fprint(ctx.Response, "Didnt render")
 		fmt.Println(err)
 		return
