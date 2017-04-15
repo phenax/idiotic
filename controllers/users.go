@@ -9,37 +9,6 @@ import (
 )
 
 //
-// UserWrapper - Wrapper for users data to send to the client
-//
-type UserWrapper struct {
-	User  models.User
-	Users []models.User
-	Ctx   *Context
-}
-
-//
-// GetLink - Get the profile link of the user
-//
-// params
-// -- users {interface{}} Optional user parameter
-//
-// returns
-// -- {string} The link to the profile
-//
-func (resp UserWrapper) GetLink(users ...interface{}) string {
-
-	var username string
-
-	if len(users) > 0 {
-		username = users[0].(string)
-	} else {
-		username = ""
-	}
-
-	return resp.User.ProfileLink(resp.Ctx.Router)(username)
-}
-
-//
 // ProfilePage - Users profile page controller
 //
 // params
@@ -68,9 +37,9 @@ func ProfilePage(ctx *Context) {
 		ContentType: "text/html",
 	}
 
-	renderContent := &UserWrapper{
-		User: user,
-		Ctx:  ctx,
+	renderContent := &map[string]interface{}{
+		"User": user,
+		"Ctx":  ctx,
 	}
 
 	ctx.Render("user", renderContent, config)

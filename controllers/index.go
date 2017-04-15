@@ -24,9 +24,9 @@ func HomePage(ctx *Context) {
 
 	models.Users.Find(nil).All(&users)
 
-	options := &UserWrapper{
-		Ctx:   ctx,
-		Users: users,
+	options := &map[string]interface{}{
+		"Ctx":   ctx,
+		"Users": users,
 	}
 
 	ctx.Render("index", options)

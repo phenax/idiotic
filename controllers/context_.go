@@ -11,14 +11,18 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	// libs "github.com/phenax/idiotic/libs"
 )
 
+// Compiled templates go here
 var compiledTemplates *template.Template
 
 func init() {
+
+	// Save it for the rest of eternity
 	compiledTemplates =
 		template.Must(
-			template.New("homepage").ParseGlob(getTemplatePath("*")),
+			template.New("wrapper").ParseGlob(getTemplatePath("*")),
 		)
 }
 

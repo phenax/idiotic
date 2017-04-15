@@ -34,7 +34,7 @@ type StaticConfig struct {
 // returns
 // -- {func(http.ResponseWriter, *http.Request)}
 //
-func Call(ctrlrFn func(*Context), router *mux.Router) func(http.ResponseWriter, *http.Request) {
+func Call(ctrlrFn func(*Context)) func(http.ResponseWriter, *http.Request) {
 
 	//
 	// The real route action handler func
@@ -49,7 +49,6 @@ func Call(ctrlrFn func(*Context), router *mux.Router) func(http.ResponseWriter, 
 		ctx := &Context{
 			Response: res,
 			Request:  req,
-			Router:   router,
 			Params:   mux.Vars(req),
 		}
 

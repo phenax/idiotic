@@ -13,12 +13,10 @@
 
 	<h3>Hello World!</h3>
 
-	{{$parent := .}}
-
 	<ul>
 		{{range .Users}}
 			<li>
-				<a href='{{$parent.GetLink .Username}}'>
+				<a href='{{.Username}}'>
 					<span>{{.Name}}</span>
 					(<span style='color: #888;'>@{{.Username}}</span>)
 				</a>
