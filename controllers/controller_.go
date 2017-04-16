@@ -21,8 +21,7 @@ import (
 type StaticConfig struct {
 	Pathprefix string
 	Directory  string
-
-	Response *ResponseConfig
+	Response   *ResponseConfig
 }
 
 //

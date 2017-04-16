@@ -27,6 +27,7 @@ func HomePage(ctx *Context) {
 	options := &map[string]interface{}{
 		"Ctx":   ctx,
 		"Users": users,
+		"Title": "Welcome to this shit",
 	}
 
 	ctx.Render("index", options)

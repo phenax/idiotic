@@ -39,10 +39,8 @@ func init() {
 type Context struct {
 	Response http.ResponseWriter
 	Request  *http.Request
-
-	Router *mux.Router
-
-	Params map[string]string
+	Router   *mux.Router
+	Params   map[string]string
 }
 
 //
@@ -53,9 +51,8 @@ type Context struct {
 // --
 //
 type ResponseConfig struct {
-	StatusCode int
-	Body       string
-
+	StatusCode      int
+	Body            string
 	ContentType     string `default:"text/plain; charset=utf-8"`
 	ContentEncoding string
 }

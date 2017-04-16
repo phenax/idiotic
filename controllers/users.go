@@ -38,8 +38,9 @@ func ProfilePage(ctx *Context) {
 	}
 
 	renderContent := &map[string]interface{}{
-		"User": user,
-		"Ctx":  ctx,
+		"User":  user,
+		"Ctx":   ctx,
+		"Title": user.Name + "'s Profile",
 	}
 
 	ctx.Render("user", renderContent, config)

@@ -11,15 +11,11 @@ import (
 // User model
 //
 type User struct {
-	ID bson.ObjectId `bson:"_id,omitempty"`
-
-	Name string `bson:"name"`
-
-	Username string `bson:"username"`
-
-	Email string `bson:"email"`
-
-	Password string `bson:"password"`
+	ID       bson.ObjectId `bson:"_id,omitempty"`
+	Name     string        `bson:"name"`
+	Username string        `bson:"username"`
+	Email    string        `bson:"email"`
+	Password string        `bson:"password"`
 }
 
 //
@@ -32,6 +28,8 @@ type User struct {
 func (user *User) SetPassword(password string) {
 	user.Password = password
 }
+
+/// ########################  Package stuff  ######################## ///
 
 // Users - User Collection
 var Users *mgo.Collection
