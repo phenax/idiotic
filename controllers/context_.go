@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"path/filepath"
 	"reflect"
 	"strconv"
 
@@ -20,13 +19,13 @@ var compiledTemplates *template.Template
 func init() {
 
 	// Save it for the rest of eternity
-	compiledTemplates =
-		template.Must(
-			template.
-				New("wrapper").
-				Funcs(libs.TemplateHelpers).
-				ParseGlob(getTemplatePath("*")),
-		)
+	compiledTemplates = libs.ParseAllTemplates()
+	// template.Must(
+	// 	template.
+	// 		New("wrapper").
+	// 		Funcs(libs.TemplateHelpers).
+	// 		ParseGlob(getTemplatePath("**/*")),
+	// )
 }
 
 //
@@ -194,24 +193,6 @@ func (ctx *Context) ErrorMessage(statusCode int, err error) {
 	ctx.Send(err.Error(), &ResponseConfig{
 		StatusCode: statusCode,
 	})
-}
-
-//
-// Get the full path to the template
-//
-// params
-// -- templateName {string}
-//
-// returns
-// -- {string}
-//
-func getTemplatePath(templateName string) string {
-
-	return filepath.Join(
-		filepath.Base("."),
-		"views",
-		templateName+".gohtml",
-	)
 }
 
 //
