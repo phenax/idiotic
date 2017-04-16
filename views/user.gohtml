@@ -7,10 +7,10 @@
 
 <div>
 	<h2>
-		<div>{{.User.Name}}</div>
-		<small style='color: #888;'>@{{.User.Username}}</small>
+		<div>{{.User.Name | html}}</div>
+		<small style='color: #888;'>@{{.User.Username | html}}</small>
 	</h2>
-	<div><strong>Email:</strong> {{.User.Email}}</div>
+	<div><strong>Email:</strong> {{.User.Email | html}}</div>
 </div>
 
 </body>
