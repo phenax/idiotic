@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"reflect"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -20,12 +19,6 @@ func init() {
 
 	// Save it for the rest of eternity
 	compiledTemplates = libs.ParseAllTemplates()
-	// template.Must(
-	// 	template.
-	// 		New("wrapper").
-	// 		Funcs(libs.TemplateHelpers).
-	// 		ParseGlob(getTemplatePath("**/*")),
-	// )
 }
 
 //
@@ -44,10 +37,12 @@ type Context struct {
 
 //
 // ResponseConfig - Craft a custom response
-// TODO: Docs
 //
 // fields
-// --
+// -- StatusCode        {int}     The status code of the response to send
+// -- Body              {string}  Content i.e. response body
+// -- ContentType       {string}  The mimetype of the data (default = gzip)
+// -- ContentEncoding   {string}  Specify the content encoding
 //
 type ResponseConfig struct {
 	StatusCode      int
@@ -67,7 +62,7 @@ func (ctx *Context) Respond(config *ResponseConfig) {
 	headers := ctx.Response.Header()
 
 	// Set the content type
-	headers.Set("Content-Type", getConf(config, "ContentType", config.ContentType))
+	headers.Set("Content-Type", libs.GetField(config, "ContentType", config.ContentType))
 
 	// Apply encoding
 	if config.ContentEncoding != "" {
@@ -93,7 +88,7 @@ func (ctx *Context) Respond(config *ResponseConfig) {
 //
 // params
 // -- str  {string}  The string to send
-// -- ...config  {*ResponseConfig}  Optional configuration
+// -- config  {*ResponseConfig}  Optional configuration
 //
 func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
 
@@ -103,7 +98,9 @@ func (ctx *Context) Send(str string, configs ...*ResponseConfig) {
 	if len(configs) > 0 {
 		config = configs[0]
 	} else {
-		config = &ResponseConfig{StatusCode: 200}
+		config = &ResponseConfig{
+			StatusCode: 200,
+		}
 	}
 
 	config.Body = str
@@ -186,6 +183,10 @@ func (ctx *Context) Render(templateName string, data interface{}, configs ...*Re
 //
 // ErrorMessage - Send an error message
 //
+// params
+// -- statusCode {int}   The status code of the response error
+// -- err        {error} Error object
+//
 func (ctx *Context) ErrorMessage(statusCode int, err error) {
 
 	fmt.Println("Error " + strconv.Itoa(statusCode) + ": " + err.Error())
@@ -193,20 +194,4 @@ func (ctx *Context) ErrorMessage(statusCode int, err error) {
 	ctx.Send(err.Error(), &ResponseConfig{
 		StatusCode: statusCode,
 	})
-}
-
-//
-// Get config and apply the default value(if any)
-//
-func getConf(config *ResponseConfig, key string, value string) string {
-
-	if value == "" {
-
-		configType := reflect.TypeOf(*config)
-
-		field, _ := configType.FieldByName(key)
-		value = field.Tag.Get("default")
-	}
-
-	return value
 }

@@ -23,35 +23,40 @@ func init() {
 //
 // ParseAllTemplates - Parses all templates
 //
+// returns
+// -- {*template.Template}
+//
 func ParseAllTemplates() *template.Template {
 
-	tmpl := template.New("wrapper").Funcs(TemplateHelpers)
-
 	root := filepath.Base(".")
+	tmpl := template.New("wrapper").Funcs(TemplateHelpers)
 
 	var files []string
 
+	// Function runs for every file in the views dir
 	walker := func(path string, info os.FileInfo, err error) error {
 
 		if err != nil {
 			return err
 		}
 
+		// Ignore all directories and non templates
 		if info.IsDir() || !strings.HasSuffix(path, ".gohtml") {
 			return nil
 		}
 
 		files = append(files, filepath.Join(root, path))
-
-		return err
+		return nil
 	}
 
+	// Walk through all templates
 	err := filepath.Walk(filepath.Join(root, "views"), walker)
 
 	if err != nil {
 		fmt.Println("File walk Error", err)
 	}
 
+	// Parse all the files found in the walk
 	return template.Must(tmpl.ParseFiles(files...))
 }
 
