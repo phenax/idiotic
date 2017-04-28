@@ -83,21 +83,3 @@ func GetLink(routeName string, fields ...string) string {
 
 	return url.String()
 }
-
-//
-// GetTemplatePath - Get the full path to the template
-//
-// params
-// -- templateName {string}
-//
-// returns
-// -- {string}
-//
-func GetTemplatePath(templateName string) string {
-
-	return filepath.Join(
-		filepath.Base("."),
-		"views",
-		templateName+".gohtml",
-	)
-}
